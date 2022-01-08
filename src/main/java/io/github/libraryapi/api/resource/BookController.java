@@ -22,7 +22,6 @@ public class BookController {
     @ResponseStatus(HttpStatus.CREATED)
     public BookDTO create(@RequestBody BookDTO bookDTO) {
         Book entity = service.save(modelMapper.map(bookDTO, Book.class));
-
         return modelMapper.map(entity, BookDTO.class);
     }
 
