@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.libraryapi.api.dto.BookDTO;
 import io.github.libraryapi.model.entity.Book;
 import io.github.libraryapi.service.BookService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,7 +75,18 @@ public class BookControllerTest {
 
     @Test
     @DisplayName("Deve lançar erro de validação quando não houver dados suficientes para criação do livro")
-    public void createInvalidBookTest() {
+    public void createInvalidBookTest() throws Exception {
 
+        String json = new ObjectMapper().writeValueAsString(new BookDTO());
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(BOOK_API_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors", Matchers.hasSize(3)));
     }
 }
